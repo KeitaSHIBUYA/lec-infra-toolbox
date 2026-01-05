@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import { ThemeProvider } from "../components/ThemeProvider";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,18 +19,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="h-full">
+    <html lang="ja" className="h-full" suppressHydrationWarning>
       <body
-        className={`${inter.className} flex flex-col min-h-screen bg-gray-50`}
+        className={`${inter.className} flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200`}
       >
-        {/* 上部にヘッダー */}
-        <Header />
+        <ThemeProvider>
+          {/* 上部にヘッダー */}
+          <Header />
 
-        {/* メインコンテンツ（各ページの中身がここに入る） */}
-        <main className="flex-grow">{children}</main>
+          {/* メインコンテンツ（各ページの中身がここに入る） */}
+          <main className="flex-grow">{children}</main>
 
-        {/* 最下部にフッター */}
-        <Footer />
+          {/* 最下部にフッター */}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

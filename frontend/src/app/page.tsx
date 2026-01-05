@@ -34,10 +34,11 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-          Infrastructure <span className="text-indigo-600">Toolbox</span>
+        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl sm:tracking-tight lg:text-6xl">
+          Infrastructure{" "}
+          <span className="text-indigo-600 dark:text-indigo-400">Toolbox</span>
         </h1>
-        <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
+        <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500 dark:text-gray-400">
           SRE・インフラエンジニアの「面倒くさい」を解消する
           <br />
           シンプルで高速なツール集
@@ -48,13 +49,13 @@ export default function Home() {
         {tools.map((tool) => (
           <div
             key={tool.id}
-            className="relative bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300"
+            className="relative bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-md dark:shadow-gray-900/50 transition-shadow duration-300"
           >
             <div className="p-6">
               <div className="flex items-center">
                 <div className="text-4xl mr-4">{tool.icon}</div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                     <Link href={tool.href} className="focus:outline-none">
                       <span className="absolute inset-0" aria-hidden="true" />
                       {tool.title}
@@ -63,24 +64,26 @@ export default function Home() {
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       tool.status === "Beta"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-800"
+                        ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
                     }`}
                   >
                     {tool.status}
                   </span>
                 </div>
               </div>
-              <p className="mt-4 text-sm text-gray-500">{tool.description}</p>
+              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                {tool.description}
+              </p>
             </div>
-            <div className="bg-gray-50 px-6 py-4">
+            <div className="bg-gray-50 dark:bg-gray-700/50 px-6 py-4">
               <div className="text-sm">
                 <Link
                   href={tool.href}
                   className={`font-medium ${
                     tool.status === "Coming Soon"
-                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
-                      : "text-indigo-600 hover:text-indigo-500"
+                      ? "text-gray-400 dark:text-gray-500 cursor-not-allowed pointer-events-none"
+                      : "text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300"
                   }`}
                 >
                   ツールを使う <span aria-hidden="true">&rarr;</span>
