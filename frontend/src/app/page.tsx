@@ -1,65 +1,95 @@
-import Image from "next/image";
+import Link from "next/link";
+
+// ツールの定義（増えたらここに追加するだけでカードが増えます）
+const tools = [
+  {
+    id: "gcp-cost-calc",
+    title: "GCP 簡易コスト計算機",
+    description:
+      "Cloud Run, Cloud SQL などの概算コストを日本円ですばやく計算できます。",
+    icon: "💰",
+    href: "/gcp-cost-calc",
+    status: "Beta",
+  },
+  {
+    id: "cidr-calc",
+    title: "CIDR サブネット計算機",
+    description:
+      "IP アドレス範囲からネットマスク、ホスト数、IP レンジを可視化します。",
+    icon: "🌐",
+    href: "#", // まだ作っていないのでリンクなし
+    status: "Coming Soon",
+  },
+  {
+    id: "cron-generator",
+    title: "Cron 式ジェネレーター",
+    description: "複雑な Cron スケジュール式を生成・解説・テストできます。",
+    icon: "⏰",
+    href: "#",
+    status: "Coming Soon",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="text-center mb-16">
+        <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+          Infrastructure <span className="text-indigo-600">Toolbox</span>
+        </h1>
+        <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
+          SRE・インフラエンジニアの「面倒くさい」を解消する
+          <br />
+          シンプルで高速なツール集
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {tools.map((tool) => (
+          <div
+            key={tool.id}
+            className="relative bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="text-4xl mr-4">{tool.icon}</div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    <Link href={tool.href} className="focus:outline-none">
+                      <span className="absolute inset-0" aria-hidden="true" />
+                      {tool.title}
+                    </Link>
+                  </h3>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      tool.status === "Beta"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
+                    {tool.status}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-4 text-sm text-gray-500">{tool.description}</p>
+            </div>
+            <div className="bg-gray-50 px-6 py-4">
+              <div className="text-sm">
+                <Link
+                  href={tool.href}
+                  className={`font-medium ${
+                    tool.status === "Coming Soon"
+                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                      : "text-indigo-600 hover:text-indigo-500"
+                  }`}
+                >
+                  ツールを使う <span aria-hidden="true">&rarr;</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

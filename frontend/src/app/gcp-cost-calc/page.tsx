@@ -15,8 +15,7 @@ export default function GcpCostPage() {
         {/* ここに計算フォーム等のコンポーネントを追加する */}
         <div className="border-t pt-4">
           <p className="text-sm text-gray-500">
-            ※
-            このツールは概算用です。正確な料金は公式Calculatorを参照してください。
+            ※ このツールは概算用です。正確な料金は公式Calculatorを参照してください。
           </p>
         </div>
       </div>
