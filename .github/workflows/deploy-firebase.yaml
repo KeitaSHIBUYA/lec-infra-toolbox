@@ -22,10 +22,11 @@ jobs:
           workload_identity_provider: "projects/715779311614/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
           service_account: "gh-actions-firebase-deploy@lec-infra-toolbox.iam.gserviceaccount.com"
 
+      # Firebase CLI インストール
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
       # Firebase デプロイ
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          channelId: live
-          projectId: lec-infra-toolbox
-          entryPoint: frontend
+      - name: Deploy to Firebase Hosting
+        run: firebase deploy --only hosting --project lec-infra-toolbox
+        working-directory: frontend
