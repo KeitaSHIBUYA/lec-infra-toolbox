@@ -1,0 +1,31 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main # デプロイしたいブランチ
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Workload Identity に必須
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # 認証ステップ：ここでキーを使わずに認証します
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: 'projects/715779311614/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'gh-actions-firebase-deploy@lec-infra-toolbox.iam.gserviceaccount.com'
+
+      # Firebase デプロイ
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: 'gh-actions-firebase-deploy@lec-infra-toolbox.iam.gserviceaccount.com'
+          channelId: live
+          projectId: lec-infra-toolbox
