@@ -319,6 +319,45 @@ export default function GcpCostPage() {
           </div>
         </div>
       </div>
+
+      {/* Cloud Run の料金体系とコスト最適化のポイント */}
+
+      <div className="mt-16 border-t border-gray-200 pt-10">
+        <div className="prose prose-lg text-gray-500 mx-auto">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Cloud Run の料金体系とコスト最適化のポイント
+          </h2>
+          <p>
+            Google Cloud Run
+            はサーバーレスなコンテナ実行環境ですが、その料金体系は「vCPU」「メモリ」「リクエスト数」の組み合わせで決まります。
+            特に注意すべきは、<strong>アイドル時の課金がない</strong>
+            という点と、<strong>無料枠の存在</strong>です。
+          </p>
+
+          <h3 className="text-xl font-bold text-gray-800 mt-6 mb-3">
+            無料枠を最大限活用するには
+          </h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Cloud Run には月間 180,000 vCPU 秒の無料枠があります。</li>
+            <li>
+              小規模な個人開発アプリや、社内ツールであれば、この無料枠内に収めることで実質 0 円運用が可能です。
+            </li>
+            <li>
+              当シミュレーターでは、この無料枠を自動的に控除して計算しています。
+            </li>
+          </ul>
+
+          <h3 className="text-xl font-bold text-gray-800 mt-6 mb-3">
+            Cloud SQL のコストに注意
+          </h3>
+          <p>
+            Cloud Run が安く済んでも、RDB（Cloud
+            SQL）は起動しているだけで時間課金が発生します。 開発環境では{" "}
+            <code>db-f1-micro</code>{" "}
+            を利用したり、夜間はインスタンスを停止するなどの工夫でコストを削減できます。
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -20,6 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full" suppressHydrationWarning>
+      <head>
+        {/* AdSense コード (IDはご自身のものに書き換えてください) */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3621315317489637"
+          crossOrigin="anonymous"
+        ></script>
+      </head>
       <body
         className={`${inter.className} flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200`}
       >

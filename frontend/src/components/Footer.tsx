@@ -13,6 +13,12 @@ export const Footer = () => {
           </div>
           <div className="flex space-x-6">
             <a
+              href="/privacy"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              プライバシーポリシー
+            </a>
+            <a
               href="https://github.com/KeitaSHIBUYA/lec-infra-toolbox"
               className="text-gray-400 hover:text-white transition-colors"
               target="_blank"
@@ -21,7 +27,6 @@ export const Footer = () => {
             >
               <FaGithub className="w-6 h-6" />
             </a>
-            {/* 必要に応じてPrivacy Policyなどを追加 */}
           </div>
         </div>
       </div>
