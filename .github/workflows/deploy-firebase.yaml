@@ -26,7 +26,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "gh-actions-firebase-deploy@lec-infra-toolbox.iam.gserviceaccount.com"
           channelId: live
           projectId: lec-infra-toolbox
           entryPoint: frontend
