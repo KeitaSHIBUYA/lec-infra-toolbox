@@ -260,19 +260,19 @@ export default function GcpCostPage() {
           {/* 右側：計算結果 (1カラム分・Sticky) */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden sticky top-24 border border-gray-200 dark:border-gray-700">
-              <div className="p-6 bg-indigo-600 dark:bg-gray-800 text-white">
-                <h3 className="text-sm font-semibold text-indigo-100 dark:text-gray-300 uppercase tracking-wider">
+              <div className="p-6 bg-white dark:bg-gray-800">
+                <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   月額見積もり (概算)
                 </h3>
                 <div className="mt-4 flex items-baseline">
-                  <span className="text-4xl font-extrabold tracking-tight">
+                  <span className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
                     ¥{cost.total.toLocaleString()}
                   </span>
-                  <span className="ml-1 text-xl font-medium text-indigo-200 dark:text-gray-400">
+                  <span className="ml-1 text-xl font-medium text-gray-500 dark:text-gray-400">
                     /mo
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-indigo-200 dark:text-gray-400">
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                   1ドル = {USD_JPY}円 換算
                 </p>
               </div>
@@ -322,19 +322,20 @@ export default function GcpCostPage() {
 
       {/* Cloud Run の料金体系とコスト最適化のポイント */}
 
-      <div className="mt-16 border-t border-gray-200 pt-10">
-        <div className="prose prose-lg text-gray-500 mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+      <div className="mt-16 border-t border-gray-200 dark:border-gray-700 pt-10">
+        <div className="prose prose-lg text-gray-500 dark:text-gray-400 mx-auto">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Cloud Run の料金体系とコスト最適化のポイント
           </h2>
           <p>
-            Google Cloud Run
+            Cloud Run
             はサーバーレスなコンテナ実行環境ですが、その料金体系は「vCPU」「メモリ」「リクエスト数」の組み合わせで決まります。
-            特に注意すべきは、<strong>アイドル時の課金がない</strong>
+            <br />
+            ポイントは、<strong>アイドル時の課金がない</strong>
             という点と、<strong>無料枠の存在</strong>です。
           </p>
 
-          <h3 className="text-xl font-bold text-gray-800 mt-6 mb-3">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
             無料枠を最大限活用するには
           </h3>
           <ul className="list-disc pl-5 space-y-2">
@@ -348,13 +349,15 @@ export default function GcpCostPage() {
             </li>
           </ul>
 
-          <h3 className="text-xl font-bold text-gray-800 mt-6 mb-3">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
             Cloud SQL のコストに注意
           </h3>
           <p>
             Cloud Run が安く済んでも、RDB（Cloud
             SQL）は起動しているだけで時間課金が発生します。 開発環境では{" "}
-            <code>db-f1-micro</code>{" "}
+            <code className="dark:bg-gray-700 dark:text-gray-200">
+              db-f1-micro
+            </code>{" "}
             を利用したり、夜間はインスタンスを停止するなどの工夫でコストを削減できます。
           </p>
         </div>

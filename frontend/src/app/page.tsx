@@ -13,12 +13,12 @@ const tools = [
   },
   {
     id: "cidr-calc",
-    title: "CIDR サブネット計算機",
+    title: "CIDR / サブネット計算機",
     description:
       "IP アドレス範囲からネットマスク、ホスト数、IP レンジを可視化します。",
     icon: "🌐",
-    href: "#", // まだ作っていないのでリンクなし
-    status: "Coming Soon",
+    href: "/cidr-calc",
+    status: "Beta",
   },
   {
     id: "cron-generator",
@@ -35,7 +35,7 @@ export default function Home() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-16">
         <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl sm:tracking-tight lg:text-6xl">
-          Infrastructure{" "}
+          SRE{" "}
           <span className="text-indigo-600 dark:text-indigo-400">Toolbox</span>
         </h1>
         <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500 dark:text-gray-400">
