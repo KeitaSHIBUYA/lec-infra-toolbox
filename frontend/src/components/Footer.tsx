@@ -9,9 +9,20 @@ export const Footer = () => {
               reserved.
             </p>
           </div>
-          <a href="/privacy" className="text-gray-400 hover:text-white text-sm">
-            プライバシーポリシー
-          </a>
+          <div className="flex gap-6">
+            <a
+              href="/contact"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              お問い合わせ
+            </a>
+            <a
+              href="/privacy"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              プライバシーポリシー
+            </a>
+          </div>
         </div>
       </div>
     </footer>
