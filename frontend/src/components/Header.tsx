@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { FaGithub } from "react-icons/fa";
 import { FiMonitor, FiMoon, FiSun } from "react-icons/fi";
 import { useTheme } from "./ThemeProvider";
 
@@ -38,22 +39,21 @@ export const Header = () => {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <span className="font-bold text-xl text-indigo-600 dark:text-indigo-400 tracking-tight">
-                Lec-Infra
-              </span>
-              <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
-                SRE のためのツールボックス
+                lec-infra
               </span>
             </Link>
           </div>
-          <div className="flex items-center space-x-4">
-            <nav className="flex space-x-4">
-              <Link
-                href="/"
-                className="text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Home
-              </Link>
-            </nav>
+          <div className="flex items-center space-x-3">
+            {/* GitHub リンク */}
+            <a
+              href="https://github.com/KeitaSHIBUYA/lec-infra-toolbox"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <FaGithub className="w-5 h-5" />
+            </a>
 
             {/* テーマ切り替えボタン */}
             <div className="relative" ref={menuRef}>

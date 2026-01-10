@@ -1,5 +1,3 @@
-import { FaGithub } from "react-icons/fa";
-
 export const Footer = () => {
   return (
     <footer className="bg-gray-800 dark:bg-gray-950 text-white mt-auto transition-colors duration-200">
@@ -11,17 +9,19 @@ export const Footer = () => {
               reserved.
             </p>
           </div>
-          <div className="flex space-x-6">
+          <div className="flex gap-6">
             <a
-              href="https://github.com/KeitaSHIBUYA/lec-infra-toolbox"
-              className="text-gray-400 hover:text-white transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
+              href="/contact"
+              className="text-gray-400 hover:text-white text-sm"
             >
-              <FaGithub className="w-6 h-6" />
+              お問い合わせ
             </a>
-            {/* 必要に応じてPrivacy Policyなどを追加 */}
+            <a
+              href="/privacy"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              プライバシーポリシー
+            </a>
           </div>
         </div>
       </div>

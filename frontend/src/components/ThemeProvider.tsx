@@ -45,7 +45,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = useSyncExternalStore(
     subscribeToStorage,
     getThemeSnapshot,
-    getServerSnapshot
+    getServerSnapshot,
   );
 
   // 解決されたテーマを計算
