@@ -2,13 +2,15 @@
 export default function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
         プライバシーポリシー & 運営者情報
       </h1>
 
-      <div className="prose prose-indigo text-gray-500">
+      <div className="prose prose-indigo dark:prose-invert text-gray-600 dark:text-gray-300">
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">運営者情報</h2>
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+            運営者情報
+          </h2>
           <p>
             <strong>サイト名:</strong> lec-infra
             <br />
@@ -19,7 +21,7 @@ export default function PrivacyPage() {
               href="https://forms.google.com/your-form-url"
               target="_blank"
               rel="nofollow"
-              className="text-indigo-600"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300"
             >
               お問い合わせフォーム（Coming Soon）
             </a>
@@ -32,7 +34,7 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             個人情報の利用目的
           </h2>
           <p>
@@ -43,7 +45,9 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">広告について</h2>
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+            広告について
+          </h2>
           <p>
             当サイトでは、第三者配信の広告サービス（Google
             AdSense）を利用しています。
