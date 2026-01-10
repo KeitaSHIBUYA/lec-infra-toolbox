@@ -51,15 +51,15 @@ export default function GcpCostPage() {
     // 無料枠の適用 (マイナスにならないようにMath.max)
     const billableCpu = Math.max(
       0,
-      vCpuSeconds - PRICING.cloudRun.freeTier.cpuSeconds
+      vCpuSeconds - PRICING.cloudRun.freeTier.cpuSeconds,
     );
     const billableMem = Math.max(
       0,
-      memoryGbSeconds - PRICING.cloudRun.freeTier.memorySeconds
+      memoryGbSeconds - PRICING.cloudRun.freeTier.memorySeconds,
     );
     const billableReq = Math.max(
       0,
-      requests - PRICING.cloudRun.freeTier.requests
+      requests - PRICING.cloudRun.freeTier.requests,
     );
 
     // ドル建て計算
