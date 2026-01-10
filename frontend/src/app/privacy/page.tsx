@@ -18,12 +18,12 @@ export default function PrivacyPage() {
             <br />
             <strong>お問い合わせ:</strong>{" "}
             <a
-              href="https://forms.google.com/your-form-url"
+              href="https://forms.gle/97EnXCYchRid8rrd6"
               target="_blank"
               rel="nofollow"
               className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300"
             >
-              お問い合わせフォーム（Coming Soon）
+              お問い合わせフォーム
             </a>
             {/* GoogleフォームのURLを発行して貼るのが一番手軽でスパムも来ません */}
           </p>
