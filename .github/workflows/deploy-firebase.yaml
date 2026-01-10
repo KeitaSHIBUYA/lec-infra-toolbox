@@ -11,6 +11,10 @@ jobs:
     permissions:
       contents: read
       id-token: write # Workload Identity に必須
+    env:
+      WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+      WIF_SERVICE_ACCOUNT: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 
     steps:
       - uses: actions/checkout@v4
@@ -19,8 +23,8 @@ jobs:
       - id: "auth"
         uses: "google-github-actions/auth@v2"
         with:
-          workload_identity_provider: "projects/715779311614/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-          service_account: "gh-actions-firebase-deploy@lec-infra-toolbox.iam.gserviceaccount.com"
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
 
       # Node.js セットアップ
       - name: Setup Node.js
@@ -46,5 +50,5 @@ jobs:
 
       # Firebase デプロイ
       - name: Deploy to Firebase Hosting
-        run: firebase deploy --only hosting --project lec-infra-toolbox
+        run: firebase deploy --only hosting --project ${{ env.GCP_PROJECT_ID }}
         working-directory: frontend

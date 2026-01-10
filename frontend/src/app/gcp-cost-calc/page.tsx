@@ -51,15 +51,15 @@ export default function GcpCostPage() {
     // 無料枠の適用 (マイナスにならないようにMath.max)
     const billableCpu = Math.max(
       0,
-      vCpuSeconds - PRICING.cloudRun.freeTier.cpuSeconds,
+      vCpuSeconds - PRICING.cloudRun.freeTier.cpuSeconds
     );
     const billableMem = Math.max(
       0,
-      memoryGbSeconds - PRICING.cloudRun.freeTier.memorySeconds,
+      memoryGbSeconds - PRICING.cloudRun.freeTier.memorySeconds
     );
     const billableReq = Math.max(
       0,
-      requests - PRICING.cloudRun.freeTier.requests,
+      requests - PRICING.cloudRun.freeTier.requests
     );
 
     // ドル建て計算
@@ -303,12 +303,12 @@ export default function GcpCostPage() {
 
                 <div className="mt-6">
                   <a
-                    href="https://console.cloud.google.com/"
+                    href="https://cloud.google.com/products/calculator?hl=ja"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white text-center hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    GCPコンソールへ
+                    詳細に見積もる
                   </a>
                 </div>
                 <p className="mt-4 text-xs text-gray-400 text-center">
@@ -332,8 +332,54 @@ export default function GcpCostPage() {
             はサーバーレスなコンテナ実行環境ですが、その料金体系は「vCPU」「メモリ」「リクエスト数」の組み合わせで決まります。
             <br />
             ポイントは、<strong>アイドル時の課金がない</strong>
-            という点と、<strong>無料枠の存在</strong>です。
+            という点と、<strong>無料枠の存在</strong>
+            です。詳細は公式ドキュメントをご確認ください。
           </p>
+
+          {/* 公式ドキュメントへのリンクカード */}
+          <a
+            href="https://cloud.google.com/run/pricing?hl=ja"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="not-prose flex items-center gap-4 p-4 mt-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm hover:shadow-md"
+          >
+            <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-900 rounded-lg">
+              <svg
+                className="w-8 h-8 text-blue-600 dark:text-blue-400"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-base font-semibold text-gray-900 dark:text-white truncate">
+                Cloud Run の料金 | Google Cloud
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                Cloud Run
+                では、使用したリソースに対してのみ課金されます（100ミリ秒単位で切り上げ）。
+              </p>
+              <span className="text-xs text-gray-400 dark:text-gray-500">
+                cloud.google.com
+              </span>
+            </div>
+            <div className="flex-shrink-0">
+              <svg
+                className="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </div>
+          </a>
 
           <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
             無料枠を最大限活用するには
@@ -354,10 +400,8 @@ export default function GcpCostPage() {
           </h3>
           <p>
             Cloud Run が安く済んでも、RDB（Cloud
-            SQL）は起動しているだけで時間課金が発生します。 開発環境では{" "}
-            <code className="dark:bg-gray-700 dark:text-gray-200">
-              db-f1-micro
-            </code>{" "}
+            SQL）は起動しているだけで時間課金が発生します。 <br />
+            開発環境では db-f1-micro
             を利用したり、夜間はインスタンスを停止するなどの工夫でコストを削減できます。
           </p>
         </div>
