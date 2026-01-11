@@ -22,12 +22,13 @@ const tools = [
     status: "Beta",
   },
   {
-    id: "cron-generator",
-    title: "Cron 式ジェネレーター",
-    description: "複雑な Cron スケジュール式を生成・解説・テストできます。",
+    id: "cron-simulator",
+    title: "Cron シミュレーター",
+    description:
+      "複雑な Cron スケジュール式を日本語で解説し、直近の実行予定時刻をシミュレーションできます。",
     icon: "⏰",
-    href: "#",
-    status: "Coming Soon",
+    href: "/cron-simulator",
+    status: "Beta",
   },
 ];
 

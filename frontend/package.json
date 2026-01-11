@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@next/third-parties": "^16.1.1",
+    "cron-parser": "^5.4.0",
+    "cronstrue": "^3.9.0",
     "ip-subnet-calculator": "^2.0.1",
     "next": "16.1.1",
     "react": "19.2.3",
