@@ -1,24 +1,16 @@
 // src/app/cidr/page.tsx
 "use client";
 
-import {
-  calculateCidr,
-  CidrCalculationResult,
-  subnetMaskToBinary,
-} from "@/lib/cidr";
-import { useEffect, useState } from "react";
+import { calculateCidr, subnetMaskToBinary } from "@/lib/cidr";
+import { useMemo, useState } from "react";
 
 export default function CidrPage() {
   // --- State管理 ---
   const [ip, setIp] = useState("192.168.1.0");
   const [mask, setMask] = useState(24);
-  const [result, setResult] = useState<CidrCalculationResult | null>(null);
 
-  // --- 計算ロジック ---
-  useEffect(() => {
-    const calculation = calculateCidr(ip, mask);
-    setResult(calculation);
-  }, [ip, mask]);
+  // --- 計算ロジック（派生状態としてuseMemoで計算） ---
+  const result = useMemo(() => calculateCidr(ip, mask), [ip, mask]);
 
   // --- ネットマスクの選択肢生成 (0-32) ---
   const maskOptions = Array.from({ length: 33 }, (_, i) => i).reverse();
