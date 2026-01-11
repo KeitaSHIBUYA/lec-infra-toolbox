@@ -1,5 +1,6 @@
 "use client";
 
+import LinkCard from "@/components/LinkCard";
 import parser from "cron-parser";
 import cronstrue from "cronstrue/i18n";
 import { useMemo, useState } from "react";
@@ -227,12 +228,8 @@ export default function CronPage() {
             など一部のサービスでは記述方法が異なる場合があるため、公式ドキュメントを確認することをお勧めします。
           </p>
           {/* 公式ドキュメントへのリンクカード */}
-          <a
-            href="https://docs.cloud.google.com/scheduler/docs/creating?hl=ja"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="not-prose flex items-center gap-4 p-4 mt-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm hover:shadow-md"
-          ></a>
+          <LinkCard url="https://cloud.google.com/scheduler/docs/creating?hl=ja" />
+          <LinkCard url="https://docs.cloud.google.com/appengine/docs/standard/scheduling-jobs-with-cron-yaml?hl=ja" />
         </div>
       </div>
     </div>
