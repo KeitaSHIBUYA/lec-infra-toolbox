@@ -84,12 +84,25 @@ export function calculateCidr(
       return null;
     }
 
+    // /31 と /32 は特殊ケース: ネットワーク/ブロードキャストの概念が異なる
+    let hostRangeStart: string;
+    let hostRangeEnd: string;
+
+    if (cidr >= 31) {
+      // /31, /32 の場合はホスト範囲 = ネットワーク範囲
+      hostRangeStart = result.ipLowStr;
+      hostRangeEnd = result.ipHighStr;
+    } else {
+      hostRangeStart = calculateHostRangeStart(result.ipLowStr);
+      hostRangeEnd = calculateHostRangeEnd(result.ipHighStr);
+    }
+
     return {
       networkAddress: result.ipLowStr,
       broadcastAddress: result.ipHighStr,
       subnetMask: result.prefixMaskStr,
-      hostRangeStart: calculateHostRangeStart(result.ipLowStr),
-      hostRangeEnd: calculateHostRangeEnd(result.ipHighStr),
+      hostRangeStart,
+      hostRangeEnd,
       hostCount: calculateHostCount(cidr),
       binaryNetmask: subnetMaskToBinary(result.prefixMaskStr),
     };

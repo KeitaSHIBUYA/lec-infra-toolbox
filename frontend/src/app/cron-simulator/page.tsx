@@ -4,19 +4,19 @@ import LinkCard from "@/components/LinkCard";
 import { formatDateJa, parseCron } from "@/lib/cron";
 import { useMemo, useState } from "react";
 
+// よく使うプリセット（コンポーネント外で定義してレンダリング時の再生成を防ぐ）
+const PRESETS = [
+  { label: "毎分", value: "* * * * *" },
+  { label: "5分おき", value: "*/5 * * * *" },
+  { label: "毎時0分", value: "0 * * * *" },
+  { label: "毎日 09:00", value: "0 9 * * *" },
+  { label: "平日 09:00", value: "0 9 * * 1-5" },
+  { label: "毎月1日 12:00", value: "0 12 1 * *" },
+] as const;
+
 export default function CronPage() {
   // 初期値: 毎日午前9時
   const [expression, setExpression] = useState("0 9 * * *");
-
-  // よく使うプリセット
-  const presets = [
-    { label: "毎分", value: "* * * * *" },
-    { label: "5分おき", value: "*/5 * * * *" },
-    { label: "毎時0分", value: "0 * * * *" },
-    { label: "毎日 09:00", value: "0 9 * * *" },
-    { label: "平日 09:00", value: "0 9 * * 1-5" },
-    { label: "毎月1日 12:00", value: "0 12 1 * *" },
-  ];
 
   // expression から派生する値は useMemo で計算
   const { description, nextRuns, error } = useMemo(() => {
@@ -79,7 +79,7 @@ export default function CronPage() {
 
             {/* プリセットボタン */}
             <div className="flex flex-wrap gap-2 justify-center mb-10">
-              {presets.map((preset) => (
+              {PRESETS.map((preset) => (
                 <button
                   key={preset.label}
                   onClick={() => setExpression(preset.value)}
@@ -134,7 +134,7 @@ export default function CronPage() {
                     <ul className="space-y-2">
                       {nextRuns.map((run, idx) => (
                         <li
-                          key={idx}
+                          key={run}
                           className="flex items-center text-sm font-mono text-gray-700 dark:text-gray-300"
                         >
                           <span className="w-6 text-indigo-400 font-bold">
