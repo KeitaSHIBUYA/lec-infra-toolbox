@@ -1,8 +1,7 @@
 "use client";
 
 import LinkCard from "@/components/LinkCard";
-import parser from "cron-parser";
-import cronstrue from "cronstrue/i18n";
+import { formatDateJa, parseCron } from "@/lib/cron";
 import { useMemo, useState } from "react";
 
 export default function CronPage() {
@@ -21,40 +20,21 @@ export default function CronPage() {
 
   // expression から派生する値は useMemo で計算
   const { description, nextRuns, error } = useMemo(() => {
-    if (!expression) {
-      return { description: "", nextRuns: [] as string[], error: "" };
-    }
+    const result = parseCron(expression);
 
-    try {
-      // 1. 日本語での解説生成
-      const desc = cronstrue.toString(expression, { locale: "ja" });
-
-      // 2. 次回実行予定の計算 (向こう5回分)
-      const interval = parser.parse(expression);
-      const runs: string[] = [];
-      for (let i = 0; i < 5; i++) {
-        // toDate() でDate オブジェクトにし、toLocaleString() でJST表示などをフォーマット
-        runs.push(
-          interval.next().toDate().toLocaleString("ja-JP", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            weekday: "short",
-          }),
-        );
-      }
-      return { description: desc, nextRuns: runs, error: "" };
-    } catch {
-      // 入力途中などはエラーになるので、UI 上は優しく扱う
+    if (result.error) {
       return {
         description: "",
         nextRuns: [] as string[],
-        error: "Cron 式の形式が正しくありません",
+        error: result.error,
       };
     }
+
+    return {
+      description: result.description || "",
+      nextRuns: result.nextRuns?.map((date) => formatDateJa(date)) || [],
+      error: "",
+    };
   }, [expression]);
 
   return (

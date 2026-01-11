@@ -2,31 +2,12 @@
 "use client";
 
 import LinkCard from "@/components/LinkCard";
+import {
+  calculateTotalGcpCost,
+  SqlInstanceType,
+  USD_JPY,
+} from "@/lib/gcp-cost";
 import { useMemo, useState } from "react";
-
-// --- 定数定義 (東京リージョン: asia-northeast1 近似値) ---
-// ※ 為替レートや単価は変動するため、メンテナンスしやすいよう定数化
-const USD_JPY = 150; // 1ドル150円換算
-
-const PRICING = {
-  cloudRun: {
-    cpu: 0.000024, // USD per vCPU-second
-    memory: 0.0000025, // USD per GB-second
-    request: 0.4, // USD per million requests
-    freeTier: {
-      cpuSeconds: 180000,
-      memorySeconds: 360000, // GB-seconds
-      requests: 2000000,
-    },
-  },
-  cloudSql: {
-    // Enterprise edition, Single zone pricing approx
-    micro: 0.013, // db-f1-micro (USD/hour)
-    small: 0.026, // db-g1-small (USD/hour)
-    medium: 0.052, // db-n1-standard-1 (approx)
-    storage: 0.17, // USD per GB/month
-  },
-};
 
 export default function GcpCostPage() {
   // --- State管理 (入力値) ---
@@ -36,66 +17,15 @@ export default function GcpCostPage() {
   const [duration, setDuration] = useState(200); // ミリ秒/リクエスト
 
   const [useSql, setUseSql] = useState(false);
-  const [sqlType, setSqlType] = useState("micro");
+  const [sqlType, setSqlType] = useState<SqlInstanceType>("micro");
   const [sqlStorage, setSqlStorage] = useState(10); // GB
 
   // --- 計算ロジック (派生データ) ---
   const cost = useMemo(() => {
-    // 1. Cloud Run Calculation
-    // 総処理時間 (秒) = リクエスト数 * (実行時間ms / 1000)
-    const totalSeconds = requests * (duration / 1000);
-
-    // vCPU秒とメモリGB秒
-    const vCpuSeconds = totalSeconds * cpu;
-    const memoryGbSeconds = totalSeconds * memory;
-
-    // 無料枠の適用 (マイナスにならないようにMath.max)
-    const billableCpu = Math.max(
-      0,
-      vCpuSeconds - PRICING.cloudRun.freeTier.cpuSeconds,
+    return calculateTotalGcpCost(
+      { cpu, memory, requests, duration },
+      { enabled: useSql, type: sqlType, storageGb: sqlStorage },
     );
-    const billableMem = Math.max(
-      0,
-      memoryGbSeconds - PRICING.cloudRun.freeTier.memorySeconds,
-    );
-    const billableReq = Math.max(
-      0,
-      requests - PRICING.cloudRun.freeTier.requests,
-    );
-
-    // ドル建て計算
-    const runCostUsd =
-      billableCpu * PRICING.cloudRun.cpu +
-      billableMem * PRICING.cloudRun.memory +
-      (billableReq / 1000000) * PRICING.cloudRun.request;
-
-    // 2. Cloud SQL Calculation
-    let sqlCostUsd = 0;
-    if (useSql) {
-      const hoursPerMonth = 730; // 平均月間時間
-      let hourlyRate = 0;
-      switch (sqlType) {
-        case "micro":
-          hourlyRate = PRICING.cloudSql.micro;
-          break;
-        case "small":
-          hourlyRate = PRICING.cloudSql.small;
-          break;
-        case "medium":
-          hourlyRate = PRICING.cloudSql.medium;
-          break;
-      }
-      sqlCostUsd =
-        hourlyRate * hoursPerMonth + sqlStorage * PRICING.cloudSql.storage;
-    }
-
-    // 日本円換算
-    return {
-      run: Math.round(runCostUsd * USD_JPY),
-      sql: Math.round(sqlCostUsd * USD_JPY),
-      total: Math.round((runCostUsd + sqlCostUsd) * USD_JPY),
-      currency: "JPY",
-    };
   }, [cpu, memory, requests, duration, useSql, sqlType, sqlStorage]);
 
   // --- UIコンポーネント ---
@@ -233,7 +163,9 @@ export default function GcpCostPage() {
                     </label>
                     <select
                       value={sqlType}
-                      onChange={(e) => setSqlType(e.target.value)}
+                      onChange={(e) =>
+                        setSqlType(e.target.value as SqlInstanceType)
+                      }
                       className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
                     >
                       <option value="micro">db-f1-micro (共有vCPU)</option>
