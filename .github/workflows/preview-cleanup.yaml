@@ -1,0 +1,44 @@
+name: Cleanup Firebase Hosting Preview
+
+on:
+  pull_request:
+    types:
+      - closed
+
+env:
+  WORKING_DIRECTORY: frontend
+
+jobs:
+  cleanup:
+    name: Delete Preview Channel
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Workload Identity に必須
+    env:
+      WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+      WIF_SERVICE_ACCOUNT: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Workload Identity Federation で認証
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
+
+      # Firebase CLI インストール
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # プレビューチャンネルを削除
+      - name: Delete Firebase Hosting Preview Channel
+        run: |
+          CHANNEL_ID="pr-${{ github.event.pull_request.number }}"
+          firebase hosting:channel:delete "$CHANNEL_ID" \
+            --project "${{ env.GCP_PROJECT_ID }}" \
+            --force
+        working-directory: ${{ env.WORKING_DIRECTORY }}
