@@ -30,6 +30,15 @@ const tools = [
     href: "/cron-simulator",
     status: "Beta",
   },
+  {
+    id: "ssl-cert-checker",
+    title: "SSL 証明書 チェッカー",
+    description:
+      "SSL 証明書の有効期限、発行元、更新までの残り日数をチェックできます。",
+    icon: "🔒",
+    href: "/ssl-cert-checker",
+    status: "Beta",
+  },
 ];
 
 export default function Home() {
