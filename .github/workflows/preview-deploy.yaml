@@ -61,11 +61,15 @@ jobs:
           CHANNEL_ID="pr-${{ github.event.pull_request.number }}"
           OUTPUT=$(firebase hosting:channel:deploy "$CHANNEL_ID" \
             --project "${{ env.GCP_PROJECT_ID }}" \
-            --expires 7d \
+            --expires 1d \
             --json)
 
-          # JSON からプレビュー URL を抽出
-          PREVIEW_URL=$(echo "$OUTPUT" | jq -r '.result["'$CHANNEL_ID'"].url')
+          # デバッグ用: JSON 出力を表示
+          echo "Firebase deploy output:"
+          echo "$OUTPUT" | jq '.'
+
+          # JSON からプレビュー URL を抽出（.result の最初のエントリから URL を取得）
+          PREVIEW_URL=$(echo "$OUTPUT" | jq -r '.result | to_entries | .[0].value.url')
           echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
           echo "channel_id=$CHANNEL_ID" >> $GITHUB_OUTPUT
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -87,9 +91,9 @@ jobs:
             | **Preview URL** | ${previewUrl} |
             | **Channel** | \`${channelId}\` |
             | **Commit** | ${shortSha} |
-            | **Expires** | 7 days |
+            | **Expires** | 1 day |
 
-            _This preview will be automatically deleted when the PR is closed or after 7 days._`;
+            _This preview will be automatically deleted when the PR is closed or after 1 day._`;
 
             // 既存のコメントを検索
             const { data: comments } = await github.rest.issues.listComments({
