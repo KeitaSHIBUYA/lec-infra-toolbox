@@ -1,31 +1,13 @@
 // src/app/gcp-cost/page.tsx
 "use client";
 
+import LinkCard from "@/components/LinkCard";
+import {
+  calculateTotalGcpCost,
+  SqlInstanceType,
+  USD_JPY,
+} from "@/lib/gcp-cost";
 import { useMemo, useState } from "react";
-
-// --- 定数定義 (東京リージョン: asia-northeast1 近似値) ---
-// ※ 為替レートや単価は変動するため、メンテナンスしやすいよう定数化
-const USD_JPY = 150; // 1ドル150円換算
-
-const PRICING = {
-  cloudRun: {
-    cpu: 0.000024, // USD per vCPU-second
-    memory: 0.0000025, // USD per GB-second
-    request: 0.4, // USD per million requests
-    freeTier: {
-      cpuSeconds: 180000,
-      memorySeconds: 360000, // GB-seconds
-      requests: 2000000,
-    },
-  },
-  cloudSql: {
-    // Enterprise edition, Single zone pricing approx
-    micro: 0.013, // db-f1-micro (USD/hour)
-    small: 0.026, // db-g1-small (USD/hour)
-    medium: 0.052, // db-n1-standard-1 (approx)
-    storage: 0.17, // USD per GB/month
-  },
-};
 
 export default function GcpCostPage() {
   // --- State管理 (入力値) ---
@@ -35,66 +17,15 @@ export default function GcpCostPage() {
   const [duration, setDuration] = useState(200); // ミリ秒/リクエスト
 
   const [useSql, setUseSql] = useState(false);
-  const [sqlType, setSqlType] = useState("micro");
+  const [sqlType, setSqlType] = useState<SqlInstanceType>("micro");
   const [sqlStorage, setSqlStorage] = useState(10); // GB
 
   // --- 計算ロジック (派生データ) ---
   const cost = useMemo(() => {
-    // 1. Cloud Run Calculation
-    // 総処理時間 (秒) = リクエスト数 * (実行時間ms / 1000)
-    const totalSeconds = requests * (duration / 1000);
-
-    // vCPU秒とメモリGB秒
-    const vCpuSeconds = totalSeconds * cpu;
-    const memoryGbSeconds = totalSeconds * memory;
-
-    // 無料枠の適用 (マイナスにならないようにMath.max)
-    const billableCpu = Math.max(
-      0,
-      vCpuSeconds - PRICING.cloudRun.freeTier.cpuSeconds,
+    return calculateTotalGcpCost(
+      { cpu, memory, requests, duration },
+      { enabled: useSql, type: sqlType, storageGb: sqlStorage },
     );
-    const billableMem = Math.max(
-      0,
-      memoryGbSeconds - PRICING.cloudRun.freeTier.memorySeconds,
-    );
-    const billableReq = Math.max(
-      0,
-      requests - PRICING.cloudRun.freeTier.requests,
-    );
-
-    // ドル建て計算
-    const runCostUsd =
-      billableCpu * PRICING.cloudRun.cpu +
-      billableMem * PRICING.cloudRun.memory +
-      (billableReq / 1000000) * PRICING.cloudRun.request;
-
-    // 2. Cloud SQL Calculation
-    let sqlCostUsd = 0;
-    if (useSql) {
-      const hoursPerMonth = 730; // 平均月間時間
-      let hourlyRate = 0;
-      switch (sqlType) {
-        case "micro":
-          hourlyRate = PRICING.cloudSql.micro;
-          break;
-        case "small":
-          hourlyRate = PRICING.cloudSql.small;
-          break;
-        case "medium":
-          hourlyRate = PRICING.cloudSql.medium;
-          break;
-      }
-      sqlCostUsd =
-        hourlyRate * hoursPerMonth + sqlStorage * PRICING.cloudSql.storage;
-    }
-
-    // 日本円換算
-    return {
-      run: Math.round(runCostUsd * USD_JPY),
-      sql: Math.round(sqlCostUsd * USD_JPY),
-      total: Math.round((runCostUsd + sqlCostUsd) * USD_JPY),
-      currency: "JPY",
-    };
   }, [cpu, memory, requests, duration, useSql, sqlType, sqlStorage]);
 
   // --- UIコンポーネント ---
@@ -232,7 +163,9 @@ export default function GcpCostPage() {
                     </label>
                     <select
                       value={sqlType}
-                      onChange={(e) => setSqlType(e.target.value)}
+                      onChange={(e) =>
+                        setSqlType(e.target.value as SqlInstanceType)
+                      }
                       className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
                     >
                       <option value="micro">db-f1-micro (共有vCPU)</option>
@@ -318,92 +251,49 @@ export default function GcpCostPage() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Cloud Run の料金体系とコスト最適化のポイント */}
+        {/* Cloud Run の料金体系とコスト最適化のポイント */}
+        <div className="mt-16 border-t border-gray-200 dark:border-gray-700 pt-10">
+          <div className="prose prose-lg text-gray-500 dark:text-gray-400 mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              Cloud Run の料金体系とコスト最適化のポイント
+            </h2>
+            <p>
+              Cloud Run
+              はサーバーレスなコンテナ実行環境ですが、その料金体系は「vCPU」「メモリ」「リクエスト数」の組み合わせで決まります。
+              <br />
+              ポイントは、<strong>アイドル時の課金がない</strong>
+              という点と、<strong>無料枠の存在</strong>
+              です。詳細は公式ドキュメントをご確認ください。
+            </p>
 
-      <div className="mt-16 border-t border-gray-200 dark:border-gray-700 pt-10">
-        <div className="prose prose-lg text-gray-500 dark:text-gray-400 mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Cloud Run の料金体系とコスト最適化のポイント
-          </h2>
-          <p>
-            Cloud Run
-            はサーバーレスなコンテナ実行環境ですが、その料金体系は「vCPU」「メモリ」「リクエスト数」の組み合わせで決まります。
-            <br />
-            ポイントは、<strong>アイドル時の課金がない</strong>
-            という点と、<strong>無料枠の存在</strong>
-            です。詳細は公式ドキュメントをご確認ください。
-          </p>
+            {/* 公式ドキュメントへのリンクカード */}
+            <LinkCard url="https://cloud.google.com/run/pricing?hl=ja" />
 
-          {/* 公式ドキュメントへのリンクカード */}
-          <a
-            href="https://cloud.google.com/run/pricing?hl=ja"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="not-prose flex items-center gap-4 p-4 mt-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm hover:shadow-md"
-          >
-            <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-900 rounded-lg">
-              <svg
-                className="w-8 h-8 text-blue-600 dark:text-blue-400"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-              </svg>
-            </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white truncate">
-                Cloud Run の料金 | Google Cloud
-              </h4>
-              <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                Cloud Run
-                では、使用したリソースに対してのみ課金されます（100ミリ秒単位で切り上げ）。
-              </p>
-              <span className="text-xs text-gray-400 dark:text-gray-500">
-                cloud.google.com
-              </span>
-            </div>
-            <div className="flex-shrink-0">
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
-            </div>
-          </a>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
+              無料枠を最大限活用するには
+            </h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Cloud Run には月間 180,000 vCPU 秒の無料枠があります。</li>
+              <li>
+                小規模な個人開発アプリや、社内ツールであれば、この無料枠内に収めることで実質
+                0 円運用が可能です。
+              </li>
+              <li>
+                当シミュレーターでは、この無料枠を自動的に控除して計算しています。
+              </li>
+            </ul>
 
-          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
-            無料枠を最大限活用するには
-          </h3>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>Cloud Run には月間 180,000 vCPU 秒の無料枠があります。</li>
-            <li>
-              小規模な個人開発アプリや、社内ツールであれば、この無料枠内に収めることで実質
-              0 円運用が可能です。
-            </li>
-            <li>
-              当シミュレーターでは、この無料枠を自動的に控除して計算しています。
-            </li>
-          </ul>
-
-          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
-            Cloud SQL のコストに注意
-          </h3>
-          <p>
-            Cloud Run が安く済んでも、RDB（Cloud
-            SQL）は起動しているだけで時間課金が発生します。 <br />
-            開発環境では db-f1-micro
-            を利用したり、夜間はインスタンスを停止するなどの工夫でコストを削減できます。
-          </p>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
+              Cloud SQL のコストに注意
+            </h3>
+            <p>
+              Cloud Run が安く済んでも、RDB（Cloud
+              SQL）は起動しているだけで時間課金が発生します。 <br />
+              開発環境では db-f1-micro
+              を利用したり、夜間はインスタンスを停止するなどの工夫でコストを削減できます。
+            </p>
+          </div>
         </div>
       </div>
     </div>

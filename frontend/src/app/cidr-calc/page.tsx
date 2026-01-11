@@ -1,39 +1,16 @@
 // src/app/cidr/page.tsx
 "use client";
 
-import { calculateSubnetMask } from "ip-subnet-calculator";
-import { useEffect, useState } from "react";
-
-interface SubnetResult {
-  ipLowStr: string;
-  ipHighStr: string;
-  prefixMaskStr: string;
-}
+import { calculateCidr, subnetMaskToBinary } from "@/lib/cidr";
+import { useMemo, useState } from "react";
 
 export default function CidrPage() {
   // --- State管理 ---
   const [ip, setIp] = useState("192.168.1.0");
   const [mask, setMask] = useState(24);
-  const [result, setResult] = useState<SubnetResult | null>(null);
 
-  // --- 計算ロジック ---
-  useEffect(() => {
-    try {
-      // ライブラリで計算
-      const calculation = calculateSubnetMask(ip, mask);
-
-      // IPアドレス形式が正しくない場合などのチェック
-      if (!calculation || !calculation.ipLowStr) {
-        throw new Error("Invalid IP Address");
-      }
-
-      setResult(calculation);
-    } catch {
-      setResult(null);
-      // 入力途中はエラーを出さず、明らかに不正な時だけ出すなどの制御も可能
-      // ここではシンプルに結果を消す
-    }
-  }, [ip, mask]);
+  // --- 計算ロジック（派生状態としてuseMemoで計算） ---
+  const result = useMemo(() => calculateCidr(ip, mask), [ip, mask]);
 
   // --- ネットマスクの選択肢生成 (0-32) ---
   const maskOptions = Array.from({ length: 33 }, (_, i) => i).reverse();
@@ -104,17 +81,17 @@ export default function CidrPage() {
                 <div className="space-y-4">
                   <ResultRow
                     label="先頭 IP (Network)"
-                    value={result.ipLowStr}
+                    value={result.networkAddress}
                     copyable
                   />
                   <ResultRow
                     label="末尾 IP (Broadcast)"
-                    value={result.ipHighStr}
+                    value={result.broadcastAddress}
                     copyable
                   />
                   <ResultRow
                     label="サブネットマスク"
-                    value={result.prefixMaskStr}
+                    value={result.subnetMask}
                     copyable
                   />
                 </div>
@@ -123,21 +100,11 @@ export default function CidrPage() {
                 <div className="space-y-4">
                   <ResultRow
                     label="利用可能ホスト範囲"
-                    value={`${result.ipLowStr
-                      .split(".")
-                      .map((o: string, i: number) =>
-                        i === 3 ? Number(o) + 1 : o,
-                      )
-                      .join(".")} 〜 ${result.ipHighStr
-                      .split(".")
-                      .map((o: string, i: number) =>
-                        i === 3 ? Number(o) - 1 : o,
-                      )
-                      .join(".")}`}
+                    value={`${result.hostRangeStart} 〜 ${result.hostRangeEnd}`}
                   />
                   <ResultRow
                     label="ホスト数"
-                    value={(Math.pow(2, 32 - mask) - 2).toLocaleString()}
+                    value={result.hostCount.toLocaleString()}
                     highlight
                   />
                   <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
@@ -145,12 +112,7 @@ export default function CidrPage() {
                       Binary Netmask
                     </span>
                     <span className="font-mono text-xs text-indigo-600 dark:text-indigo-400 break-all">
-                      {result.prefixMaskStr
-                        .split(".")
-                        .map((octet: string) =>
-                          parseInt(octet).toString(2).padStart(8, "0"),
-                        )
-                        .join(".")}
+                      {subnetMaskToBinary(result.subnetMask)}
                     </span>
                   </div>
                 </div>
