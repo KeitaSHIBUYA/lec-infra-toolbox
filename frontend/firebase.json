@@ -3,6 +3,30 @@
     "public": "out",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "/api/ssl-cert-checker",
+        "function": {
+          "functionId": "sslCertChecker",
+          "region": "asia-northeast1"
+        }
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "hosting": {
+      "port": 5002
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
   }
 }

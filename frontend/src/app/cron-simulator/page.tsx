@@ -153,9 +153,12 @@ export default function CronPage() {
 
         {/* SEO / 解説コンテンツ */}
         <div className="prose prose-lg text-gray-500 dark:text-gray-400 mx-auto mt-16 border-t border-gray-200 dark:border-gray-700 pt-10">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Cron（クーロン）の設定方法
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            💡 Tips
           </h2>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3">
+            Cron（クーロン）の設定方法
+          </h3>
           <p>
             Cron は、Unix 系 OS
             でコマンドを定時実行するためのデーモンプロセスです。
