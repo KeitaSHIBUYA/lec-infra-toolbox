@@ -38,7 +38,10 @@ const changelog: ChangelogEntry[] = [
   },
 ];
 
-const typeLabels: Record<string, { label: string; color: string }> = {
+const typeLabels: Record<
+  ChangelogEntry["changes"][number]["type"],
+  { label: string; color: string }
+> = {
   new: {
     label: "NEW",
     color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
@@ -69,8 +72,11 @@ export default function ChangelogPage() {
       </p>
 
       <div className="space-y-8">
-        {changelog.map((entry, index) => (
-          <div key={index} className="border-l-4 border-indigo-500 pl-4 py-2">
+        {changelog.map((entry) => (
+          <div
+            key={entry.version || entry.date}
+            className="border-l-4 border-indigo-500 pl-4 py-2"
+          >
             <div className="flex items-center gap-3 mb-3">
               <time className="text-lg font-semibold text-gray-900 dark:text-white">
                 {entry.date}
@@ -82,8 +88,8 @@ export default function ChangelogPage() {
               )}
             </div>
             <ul className="space-y-2">
-              {entry.changes.map((change, changeIndex) => (
-                <li key={changeIndex} className="flex items-start gap-2">
+              {entry.changes.map((change) => (
+                <li key={change.description} className="flex items-start gap-2">
                   <span
                     className={`px-2 py-0.5 text-xs font-medium rounded ${typeLabels[change.type].color}`}
                   >
