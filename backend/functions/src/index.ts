@@ -60,7 +60,11 @@ function getCertificateInfo(hostname: string): Promise<CertificateInfo> {
 }
 
 export const sslCertChecker = onRequest(
-  { cors: true, region: "asia-northeast1" },
+  {
+    cors: true,
+    region: "asia-northeast1",
+    // enforceAppCheck: true, // App Check トークンを検証
+  },
   async (req, res) => {
     const domain = req.query.domain as string;
 

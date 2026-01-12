@@ -7,7 +7,6 @@ on:
 
 env:
   NODE_VERSION: "20"
-  WORKING_DIRECTORY: frontend
 
 jobs:
   preview:
@@ -38,17 +37,17 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
-          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       # 依存関係のインストール
       - name: Install dependencies
         run: npm ci
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: frontend
 
       # Next.js アプリのビルド
       - name: Build Next.js app
         run: npm run build
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: frontend
 
       # Firebase CLI インストール
       - name: Install Firebase CLI
@@ -72,7 +71,6 @@ jobs:
           PREVIEW_URL=$(echo "$OUTPUT" | jq -r '.result | to_entries | .[0].value.url')
           echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
           echo "channel_id=$CHANNEL_ID" >> $GITHUB_OUTPUT
-        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       # PR にコメント
       - name: Comment on PR
