@@ -24,17 +24,8 @@ export default function SslPage() {
     setResult(null);
 
     try {
-      // App Check トークンを取得
-      const headers: HeadersInit = {};
-      const appCheck = getAppCheck();
-      if (appCheck) {
-        const tokenResult = await getToken(appCheck);
-        headers["X-Firebase-AppCheck"] = tokenResult.token;
-      }
-
       const res = await fetch(
         `/api/ssl-cert-checker?domain=${encodeURIComponent(domain)}`,
-        { headers },
       );
       const data = await res.json();
 
