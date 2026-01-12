@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const Footer = () => {
   return (
     <footer className="bg-gray-800 dark:bg-gray-950 text-white mt-auto transition-colors duration-200">
@@ -9,19 +11,37 @@ export const Footer = () => {
               reserved.
             </p>
           </div>
-          <div className="flex gap-6">
-            <a
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+            <Link
               href="/contact"
               className="text-gray-400 hover:text-white text-sm"
             >
               お問い合わせ
-            </a>
-            <a
+            </Link>
+            <Link
               href="/privacy"
               className="text-gray-400 hover:text-white text-sm"
             >
               プライバシーポリシー
-            </a>
+            </Link>
+            <Link
+              href="/terms"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              利用規約
+            </Link>
+            <Link
+              href="/disclaimer"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              免責事項
+            </Link>
+            <Link
+              href="/changelog"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              更新履歴
+            </Link>
           </div>
         </div>
       </div>
