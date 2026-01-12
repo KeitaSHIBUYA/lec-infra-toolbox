@@ -1,14 +1,12 @@
 "use client";
 
 import LinkCard from "@/components/LinkCard";
-import { getAppCheck } from "@/lib/firebase";
 import {
   formatSslDate,
   getSslStatus,
   getSslStatusColorClass,
   type SslResult,
 } from "@/lib/ssl";
-import { getToken } from "firebase/app-check";
 import React, { useState } from "react";
 
 export default function SslPage() {
@@ -26,8 +24,17 @@ export default function SslPage() {
     setResult(null);
 
     try {
+      // App Check トークンを取得
+      const headers: HeadersInit = {};
+      const appCheck = getAppCheck();
+      if (appCheck) {
+        const tokenResult = await getToken(appCheck);
+        headers["X-Firebase-AppCheck"] = tokenResult.token;
+      }
+
       const res = await fetch(
         `/api/ssl-cert-checker?domain=${encodeURIComponent(domain)}`,
+        { headers },
       );
       const data = await res.json();
 
