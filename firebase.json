@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "out",
+    "public": "frontend/out",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "cleanUrls": true,
     "trailingSlash": false,
@@ -15,7 +15,7 @@
     ]
   },
   "functions": {
-    "source": "functions"
+    "source": "backend/functions"
   },
   "emulators": {
     "functions": {
