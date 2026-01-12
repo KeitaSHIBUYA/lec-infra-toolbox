@@ -9,7 +9,7 @@ export const Footer = () => {
               reserved.
             </p>
           </div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
             <a
               href="/contact"
               className="text-gray-400 hover:text-white text-sm"
@@ -21,6 +21,24 @@ export const Footer = () => {
               className="text-gray-400 hover:text-white text-sm"
             >
               プライバシーポリシー
+            </a>
+            <a
+              href="/terms"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              利用規約
+            </a>
+            <a
+              href="/disclaimer"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              免責事項
+            </a>
+            <a
+              href="/changelog"
+              className="text-gray-400 hover:text-white text-sm"
+            >
+              更新履歴
             </a>
           </div>
         </div>
