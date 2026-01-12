@@ -22,10 +22,7 @@ export const Footer = () => {
             >
               プライバシーポリシー
             </a>
-            <a
-              href="/terms"
-              className="text-gray-400 hover:text-white text-sm"
-            >
+            <a href="/terms" className="text-gray-400 hover:text-white text-sm">
               利用規約
             </a>
             <a

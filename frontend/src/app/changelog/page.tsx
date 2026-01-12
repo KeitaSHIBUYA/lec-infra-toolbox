@@ -70,10 +70,7 @@ export default function ChangelogPage() {
 
       <div className="space-y-8">
         {changelog.map((entry, index) => (
-          <div
-            key={index}
-            className="border-l-4 border-indigo-500 pl-4 py-2"
-          >
+          <div key={index} className="border-l-4 border-indigo-500 pl-4 py-2">
             <div className="flex items-center gap-3 mb-3">
               <time className="text-lg font-semibold text-gray-900 dark:text-white">
                 {entry.date}
